@@ -45,7 +45,6 @@ export function HomeNavbar() {
                                 Help
                             </NavLink>
                         </Box>
-                        {/* BASKET */}
 
                         {!authMember ? (
                             <Box>
