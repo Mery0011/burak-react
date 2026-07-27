@@ -24,7 +24,7 @@ import { useHistory } from "react-router-dom";
 const actionDispatch = (dispatch: Dispatch) => ({
     setProducts: (data: Product[]) => dispatch(setProducts(data)),
 });
-const productsRetriever = createSelector(retrieveProducts, (products) => ({ products, }))
+const productsRetriever = createSelector(retrieveProducts, (products) => ({ products, }));
 
 
 
