@@ -15,6 +15,8 @@ export default function UserPage() {
   const { authMember } = useGlobals();
 
   if (!authMember) history.push("/");
+  console.log("auth", authMember); //@ts-ignore
+  //const = authMember.result;
 
   return (
     <div className={"user-page"}>

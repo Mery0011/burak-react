@@ -4,12 +4,13 @@ import { Member } from "../../lib/types/member";
 interface GlobalInterface {
     authMember: Member | null;
     setAuthMember: (member: Member | null) => void;
+    BASKET: any;
     orderBuilder: Date;
     setOrderBuilder: (input: Date) => void;
 }
 
 export const GlobalContext = createContext<GlobalInterface | undefined>(
-    undefined
+    undefined,
 );
 
 export const useGlobals = () => {

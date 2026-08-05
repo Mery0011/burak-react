@@ -1,7 +1,8 @@
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import Cookies from "universal-cookie";
-import { Member } from "../../lib/types/member";
 import { GlobalContext } from "../hooks/useGlobals";
+import { Member } from "../../lib/types/member";
+import useBasket from "../hooks/useBasket";
 
 const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const cookies = new Cookies();
@@ -10,20 +11,24 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [authMember, setAuthMember] = useState<Member | null>(
         localStorage.getItem("memberData")
             ? JSON.parse(localStorage.getItem("memberData") as string)
-            : null
+            : null,
     );
     const [orderBuilder, setOrderBuilder] = useState<Date>(new Date());
     console.log("=== verify ===");
 
     return (
-        <GlobalContext.Provider value={{ authMember, setAuthMember, orderBuilder, setOrderBuilder }}>
+        <GlobalContext.Provider
+            value={{
+                authMember,
+                setAuthMember,
+                BASKET: useBasket(),
+                orderBuilder,
+                setOrderBuilder,
+            }}
+        >
             {children}
         </GlobalContext.Provider>
     );
 };
 
 export default ContextProvider;
-
-function newDate(): Date | (() => Date) {
-    throw new Error("Function not implemented.");
-}

@@ -4,20 +4,21 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import PausedOrders from "./PausedOrders";
 import ProcessOrders from "./ProcessOrders";
 import FinishedOrders from "./FinishedOrders";
-import PausedOrders from "./PausedOrders";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
-import { setPausedOrders, setProcessOrders, setFinishedOrders, } from "./slice";
+import { setPausedOrders, setProcessOrders, setFinishedOrders } from "./slice";
 import { Order, OrderInquiry } from "../../../lib/types/order";
 import { OrderStatus } from "../../../lib/enums/order.enum";
-import OrderService from "../../services/OrderServices";
+
 import { useGlobals } from "../../hooks/useGlobals";
-import { useHistory } from "react-router-dom";
 import "../../../css/order.css";
+import { useHistory } from "react-router";
 import { serverApi } from "../../../lib/config";
 import { MemberType } from "../../../lib/enums/member.enum";
+import OrderService from "../../services/OrderServices";
 
 /** REDUX SLICE & SELECTOR */
 const actionDispatch = (dispatch: Dispatch) => ({
@@ -29,9 +30,8 @@ const actionDispatch = (dispatch: Dispatch) => ({
 export default function OrdersPage() {
     const { setPausedOrders, setProcessOrders, setFinishedOrders } =
         actionDispatch(useDispatch());
-    const { orderBuilder, authMember } = useGlobals();
+    const { authMember, orderBuilder } = useGlobals();
     const history = useHistory();
-
     const [value, setValue] = useState("1");
     const [orderInquiry, setOrderInquiry] = useState<OrderInquiry>({
         page: 1,
@@ -43,9 +43,7 @@ export default function OrdersPage() {
         const order = new OrderService();
 
         order
-            .getMyOrders({
-                ...orderInquiry, orderStatus: OrderStatus.PAUSE
-            })
+            .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.PAUSE })
             .then((data) => setPausedOrders(data))
             .catch((err) => console.log(err));
 
@@ -60,11 +58,12 @@ export default function OrdersPage() {
             .catch((err) => console.log(err));
     }, [orderInquiry, orderBuilder]);
 
-    /**HANDLERS */
+    /** HANDLER */
 
     const handleChange = (e: SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
+
     if (!authMember) history.push("/");
     return (
         <div className={"order-page"}>
@@ -101,8 +100,10 @@ export default function OrdersPage() {
                                     src={
                                         authMember?.memberImage
                                             ? `${serverApi}/${authMember.memberImage}`
-                                            : "/icons/default-user.svg"}
+                                            : "/icons/default-user.svg"
+                                    }
                                     className={"order-user-avatar"}
+                                    alt=""
                                 />
                                 <div className={"order-user-icon-box"}>
                                     <img
@@ -112,11 +113,16 @@ export default function OrdersPage() {
                                                 : "/icons/user-badge.svg"
                                         }
                                         className={"order-user-prof-img"}
+                                        alt=""
                                     />
                                 </div>
                             </div>
-                            <span className={"order-user-name"}>  {authMember?.memberNick}</span>
-                            <span className={"order-user-prof"}>  {authMember?.memberType}</span>
+                            <span className={"order-user-name"}>
+                                {authMember?.memberNick}
+                            </span>
+                            <span className={"order-user-prof"}>
+                                {authMember?.memberType}
+                            </span>
                         </Box>
                         <Box className={"liner"}></Box>
                         <Box className={"order-user-address"}>
@@ -125,7 +131,9 @@ export default function OrdersPage() {
                             </div>
                             <div className={"spec-address-txt"}>
                                 {authMember?.memberAddress
-                                    ? authMember.memberAddress : "Do not exist"}</div>
+                                    ? authMember.memberAddress
+                                    : "Do not exist"}
+                            </div>
                         </Box>
                     </Box>
                     <Box className={"order-info-box"} sx={{ mt: "15px" }}>
@@ -162,10 +170,10 @@ export default function OrdersPage() {
                             className={"card-input"}
                         />
                         <div className={"cards-box"}>
-                            <img src={"/icons/western-card.svg"} />
-                            <img src={"/icons/master-card.svg"} />
-                            <img src={"/icons/paypal-card.svg"} />
-                            <img src={"/icons/visa-card.svg"} />
+                            <img src={"/icons/western-card.svg"} alt="" />
+                            <img src={"/icons/master-card.svg"} alt="" />
+                            <img src={"/icons/paypal-card.svg"} alt="" />
+                            <img src={"/icons/visa-card.svg"} alt="" />
                         </div>
                     </Box>
                 </Stack>

@@ -1,9 +1,13 @@
 import axios from "axios";
-import { LoginInput, Member, MemberInput, MemberUpdateInput } from "../../lib/types/member";
 import { serverApi } from "../../lib/config";
+import {
+    LoginInput,
+    Member,
+    MemberInput,
+    MemberUpdateInput,
+} from "../../lib/types/member";
 
 class MemberService {
-
     private readonly path: string;
 
     constructor() {
@@ -14,7 +18,7 @@ class MemberService {
         try {
             const url = this.path + "/member/top-users";
             const result = await axios.get(url);
-            console.log("getTopUsers:", result);
+            console.log("getTopUser:", result);
 
             return result.data;
         } catch (err) {
@@ -22,6 +26,7 @@ class MemberService {
             throw err;
         }
     }
+
     public async getRestaurant(): Promise<Member> {
         try {
             const url = this.path + "/member/restaurant";
@@ -78,12 +83,13 @@ class MemberService {
 
             localStorage.removeItem("memberData");
         } catch (err) {
-            console.log("Error, logout!", err);
+            console.log("Error, logout:", err);
             throw err;
         }
     }
 
     public async updateMember(input: MemberUpdateInput): Promise<Member> {
+        console.log("1111", input);
         try {
             const formData = new FormData();
             formData.append("memberNick", input.memberNick || "");
@@ -91,6 +97,7 @@ class MemberService {
             formData.append("memberAddress", input.memberAddress || "");
             formData.append("memberDesc", input.memberDesc || "");
             formData.append("memberImage", input.memberImage || "");
+
             const result = await axios(`${serverApi}/member/update`, {
                 method: "POST",
                 data: formData,
@@ -99,7 +106,9 @@ class MemberService {
                     "Content-Type": "multipart/form-data",
                 },
             });
+
             console.log("updateMember:", result);
+
             const member: Member = result.data;
             localStorage.setItem("memberData", JSON.stringify(member));
             return member;
